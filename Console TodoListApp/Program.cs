@@ -1,13 +1,14 @@
 ﻿
 
 
+using System.Security.Cryptography;
 using Console_TodoListApp.EfcoreExamples;
 
 Console.WriteLine(value: "Welcome To Console Todo-list App");
 
 Console.WriteLine();
 EfcoreExample efcore = new EfcoreExample();
-efcore.ReadUser();
+
 Console.Write("Register (r), ");
 
 
@@ -50,10 +51,7 @@ if (start is "r" || start is "R")
 #region Login
 
 
-int login = 1;
 
-while (login == 1 || login > 1)
-{
 
     if (start is "l" || start is "L")
     {
@@ -72,7 +70,35 @@ while (login == 1 || login > 1)
 
         efcore.LoginUser(email, password);
 
+        
+       
+        
+
+        Console.WriteLine("Add the Task   write : (nt) || Done    write : (dt) || exit write : (e)" );
+        
+       string task = Console.ReadLine()!;   
+       Console.WriteLine();
+
+       if(task is "nt")
+    {
+        Console.WriteLine("Please enter your task");
+        string title = Console.ReadLine()!;
+        Console.WriteLine();
+        efcore.WriteTask(email,title);
+    } 
+       if(task is "dt")
+    {
+        Console.WriteLine("Please enter the title that you have done.");
+        string title = Console.ReadLine()!;
+        Console.WriteLine();
+        efcore.DeleteTask(email, title);
+    }  if(task is "e")
+    {
+        Console.WriteLine("Thank For Using");
+      
+        
     }
+    
 }
 #endregion
 

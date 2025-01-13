@@ -137,8 +137,15 @@ public class EfcoreExample
         {
             Console.WriteLine("Login Successful");
             Console.WriteLine();
+            Console.WriteLine("________________________");
             Console.WriteLine();
+            Console.WriteLine("Your Todo-lists");
+            Console.WriteLine();
+            ReadTask(user.email!);
 
+            
+            
+            
         }
 
 
@@ -148,13 +155,20 @@ public class EfcoreExample
 
     #region Task
 
-    private void WriteTask (string title,string description)
+    public void WriteTask (string email,string title)
     {
+        var user = _appDbContext.users.AsNoTracking().Any(x => x.email == email);
+
+        if (!user)
+        {
+            Console.WriteLine("The provided email does not exist. Please check and try again.");
+            return;
+        }
+
         var item = new TaskModel {
             title = title,
-            description = description,
-            status = 1,
-            datetime = DateTime.Now 
+            email = email,
+            DataTime = DateTime.Now 
         };
 
         _appDbContext.tasks.Add(item);
@@ -165,35 +179,55 @@ public class EfcoreExample
         
     }
 
-    private void ReadTask()
+    private void ReadTask(string email)
     {
-      var item =   _appDbContext.tasks.AsNoTracking().ToList();
+        var item = from task in _appDbContext.tasks.AsNoTracking()
+                    join user in _appDbContext.users.AsNoTracking()
+                    on task.email equals user.email
+                    where user.email == email
+                    select new
+                    {
+                        TaskTitle = task.title,
+                        TaskDateTime = task.DataTime,
+                        UserEmail = user.email
+                    };
 
-        foreach (var task in item)
+        if (!item.Any())
         {
-            Console.WriteLine("Id => " + task.taskid);
-            Console.WriteLine("Title => " +task.title);
-            Console.WriteLine("Description => " + task.description);
-            Console.WriteLine();
-            Console.WriteLine("___________________________________");
-            Console.WriteLine();
-        }
-    }
-    private void DeleteTask(string title)
-    {
-        var item = _appDbContext.tasks.AsNoTracking().FirstOrDefault(x => x.title == title);
-
-        if (item is null)
-        {
-            Console.WriteLine("You don't have that title");
+            Console.WriteLine("No tasks found for the given email.");
             return;
         }
 
-        _appDbContext.Entry(item).State = EntityState.Deleted;
+        int count = 1;
+        foreach (var task in item)
+        {
+
+            Console.WriteLine($"Task ({count}) => {task.TaskTitle} || {task.TaskDateTime}");
+            Console.WriteLine();
+            Console.WriteLine("_____________________________________________________________________");
+            count++;
+        }
+    }
+    public void DeleteTask(string email, string title)
+    {
+        var item = (from task in _appDbContext.tasks.AsNoTracking()
+                    join user in _appDbContext.users.AsNoTracking()
+                    on task.email equals user.email
+                    where task.title == title && user.email == email
+                    select task).FirstOrDefault();
+
+        if (item is null)
+        {
+            Console.WriteLine("No task found with the provided title for this email.");
+            return;
+        }
+
+        _appDbContext.tasks.Remove(item);
         int i = _appDbContext.SaveChanges();
 
-        string message = i > 0 ? "You added new Task" : "Adding new Task failed";
+        string message = i > 0 ? "Task deleted successfully" : "Deleting the task failed";
         Console.WriteLine(message);
     }
+
     #endregion
 }

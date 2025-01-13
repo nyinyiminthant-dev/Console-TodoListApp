@@ -12,11 +12,9 @@ namespace Console_TodoListApp.Dtos
     public class TaskModel
     {
         [Key]
-        public int taskid { get; set; }
+        public int Task_Id { get; set; }
         public string? title { get; set; }
-        public string? description { get; set; }
-        public int status { get; set; }
-        public DateTime datetime { get; set; }
-
+        public DateTime DataTime { get; set; }
+        public string? email { get; set; }
     }
 }
