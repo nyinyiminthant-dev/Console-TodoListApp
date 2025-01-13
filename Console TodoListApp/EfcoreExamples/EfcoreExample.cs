@@ -50,7 +50,7 @@ public class EfcoreExample
             Console.WriteLine("________________________________");
             Console.WriteLine();
         }
-    }
+    } 
 
     public void EditUser(int userid)
     {
