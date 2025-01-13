@@ -87,7 +87,7 @@ public class EfcoreExample
         string message = i > 0 ? "Account has successfully updated" : "Updating account has failed";
 
         Console.WriteLine(message);
-        Console.WriteLine("_____________________________");
+        
         Console.WriteLine();
 
     }
@@ -109,7 +109,7 @@ public class EfcoreExample
        
 
         Console.WriteLine(message);
-        Console.WriteLine("_____________________________");
+       
         Console.WriteLine();
     }
 
@@ -147,5 +147,53 @@ public class EfcoreExample
     #endregion
 
     #region Task
+
+    private void WriteTask (string title,string description)
+    {
+        var item = new TaskModel {
+            title = title,
+            description = description,
+            status = 1,
+            datetime = DateTime.Now 
+        };
+
+        _appDbContext.tasks.Add(item);
+        int i = _appDbContext.SaveChanges();
+
+        string message = i > 0 ? "You added new Task" : "Adding new Task failed";
+        Console.WriteLine(message);
+        
+    }
+
+    private void ReadTask()
+    {
+      var item =   _appDbContext.tasks.AsNoTracking().ToList();
+
+        foreach (var task in item)
+        {
+            Console.WriteLine("Id => " + task.taskid);
+            Console.WriteLine("Title => " +task.title);
+            Console.WriteLine("Description => " + task.description);
+            Console.WriteLine();
+            Console.WriteLine("___________________________________");
+            Console.WriteLine();
+        }
+    }
+    private void DeleteTask(string title)
+    {
+        var item = _appDbContext.tasks.AsNoTracking().FirstOrDefault(x => x.title == title);
+
+        if (item is null)
+        {
+            Console.WriteLine("You don't have that title");
+            return;
+        }
+
+        _appDbContext.Entry(item).State = EntityState.Deleted;
+        int i = _appDbContext.SaveChanges();
+
+        string message = i > 0 ? "You added new Task" : "Adding new Task failed";
+        Console.WriteLine(message);
+    }
     #endregion
 }
