@@ -92,6 +92,7 @@ while (count is 1 ||count > 1)
                 string title = Console.ReadLine()!;
                 Console.WriteLine();
                 efcore.WriteTask(email, title);
+                efcore.ReadTask(email);
                 lcount++;
                 
             }
@@ -101,6 +102,7 @@ while (count is 1 ||count > 1)
                 string title = Console.ReadLine()!;
                 Console.WriteLine();
                 efcore.DeleteTask(email, title);
+                efcore.ReadTask(email);
                 lcount++;
                
             }
@@ -132,6 +134,7 @@ while (count is 1 ||count > 1)
     if (round is "Y" || round is "y")
     {
         count++;
+        lcount++;
         Console.WriteLine("Welcome To Console Todo-list App again.");
         Console.WriteLine();
     }

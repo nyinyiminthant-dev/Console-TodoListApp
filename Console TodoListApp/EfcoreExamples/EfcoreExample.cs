@@ -176,10 +176,11 @@ public class EfcoreExample
 
         string message = i > 0 ? "You added new Task" : "Adding new Task failed";
         Console.WriteLine(message);
+        Console.WriteLine();
         
     }
 
-    private void ReadTask(string email)
+    public void ReadTask(string email)
     {
         var item = from task in _appDbContext.tasks.AsNoTracking()
                     join user in _appDbContext.users.AsNoTracking()
@@ -225,8 +226,9 @@ public class EfcoreExample
         _appDbContext.tasks.Remove(item);
         int i = _appDbContext.SaveChanges();
 
-        string message = i > 0 ? "Task deleted successfully" : "Deleting the task failed";
+        string message = i > 0 ? "Task is done " : "Done the task failed";
         Console.WriteLine(message);
+        Console.WriteLine();
     }
 
     #endregion
