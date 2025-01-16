@@ -9,8 +9,10 @@ Console.WriteLine();
 
 EfcoreExample efcore = new EfcoreExample();
 
-int count = 1;
-int lcount = 1;
+int count, lcount;
+
+ count = 1;
+ lcount = 1;
 
 while (count is 1 ||count > 1)
 {
